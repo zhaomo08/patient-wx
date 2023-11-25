@@ -3,3 +3,6 @@
 node_modules/*
 .hbuilderx/
 unpackage/
+/.idea/modules.xml
+/.idea/patient-wx.iml
+/.idea/vcs.xml
