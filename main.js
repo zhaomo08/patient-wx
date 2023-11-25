@@ -2,10 +2,11 @@ import App from './App'
 
 // #ifndef VUE3
 import Vue from 'vue'
-Vue.config.productionTip = false
-
 //使用uView组件库
 import uView from 'uview-ui'
+
+Vue.config.productionTip = false
+
 Vue.use(uView)
 
 App.mpType = 'app'
@@ -36,7 +37,7 @@ Vue.prototype.patientUrl = patientUrl
 
 Vue.prototype.tencent = {
 	trtc: {
-		appid: "TRTC的APPID"
+		appid: "1600013807"
 	}
 }
 
@@ -48,32 +49,34 @@ Vue.prototype.api = {
 	updateUserInfoCard: baseUrl + "/user/info/card/update",
 	searchUserInfo: baseUrl + "/user/searchUserInfo",
 	searchUserInfoCard: baseUrl + "/user/info/card/searchUserInfoCard",
-	updateUserInfoCard: baseUrl + "/user/info/card/update",
 	hasUserInfoCard: baseUrl + "/user/info/card/hasUserInfoCard",
-	searchMedicalDeptList: baseUrl + "/medical/dept/searchMedicalDeptList",    searchMedicalDeptSubList: baseUrl + "/medical/dept/sub/searchMedicalDeptSubList",
-	searchCanRegisterInDateRange: baseUrl + "/registration/searchCanRegisterInDateRange",    searchDeptSubDoctorPlanInDay: baseUrl + "/registration/searchDeptSubDoctorPlanInDay",
-	
+	searchMedicalDeptList: baseUrl + "/medical/dept/searchMedicalDeptList",
+    searchMedicalDeptSubList: baseUrl + "/medical/dept/sub/searchMedicalDeptSubList",
+	searchCanRegisterInDateRange: baseUrl + "/registration/searchCanRegisterInDateRange",
+    searchDeptSubDoctorPlanInDay: baseUrl + "/registration/searchDeptSubDoctorPlanInDay",
+
 	checkRegisterCondition: baseUrl + "/registration/checkRegisterCondition",
-	
+
 	createFaceModel: baseUrl + "/face/auth/createFaceModel",
 	verifyFaceModel: baseUrl + "/face/auth/verifyFaceModel",
-	
+
 	searchDoctorWorkPlanSchedule: baseUrl + "/registration/searchDoctorWorkPlanSchedule",
 	searchDoctorInfoById: baseUrl + "/doctor/searchDoctorInfoById",
-	
-	
+
+
 	registerMedicalAppointment: baseUrl + "/registration/registerMedicalAppointment",
 	searchRegisterPaymentResult: baseUrl + "/registration/searchPaymentResult",
-	
-	
+
+
 	searchRegistrationByPage: baseUrl + "/registration/searchRegistrationByPage",
-	
+
 	repayRegistration: baseUrl + "/registration/repayRegistration",
-	
-	
-	searchRegistrationInfo: baseUrl + "/registration/searchRegistrationInfo",
-	
-	
+
+
+	searchRegistrationInfo: baseUrl + "/registration/searchRegistrationInfo",
+
+
+
 }
 
 Vue.prototype.ajax = function(url, method, data, fun, load) {
