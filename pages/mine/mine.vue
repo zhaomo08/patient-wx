@@ -253,16 +253,16 @@
 					url = '/user/fill_user_info/fill_user_info';
 				}
 				else if(name == '我的医生'){
-					
+
 				}
 				else if(name == '检查报告'){
-					
+
 				}
 				else if(name == '电子处方'){
-					
+
 				}
 				else if(name == '视频问诊'){
-					
+          url = '/video_diagnose/order_list/order_list';
 				}
 				else if(name == '挂号就诊'){
 					url = '/registration/notice/notice';

@@ -93,13 +93,17 @@ export default {
 		};
 	},
 	methods: {
-		
+    registerHandle: function() {
+      uni.navigateTo({
+        url: '../doctor_list/doctor_list'
+      });
+    },
 	},
 	onShow: function() {
-		
+
 	},
 	onReachBottom: function() {
-		
+
 	}
 };
 </script>

@@ -76,6 +76,15 @@ Vue.prototype.api = {
 	searchRegistrationInfo: baseUrl + "/registration/searchRegistrationInfo",
 
 
+    searchDeptAndSub: baseUrl + "/medical/dept/searchDeptAndSub",
+
+	searchOnlineDoctorList: baseUrl + "/video_diagnose/searchOnlineDoctorList",
+
+	createVideoDiagnose: baseUrl + "/video_diagnose/createVideoDiagnose",
+
+	searchVideoDiagnosePaymentResult: baseUrl + "/video_diagnose/searchPaymentResult",
+
+
 
 }
 
