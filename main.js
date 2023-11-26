@@ -89,6 +89,9 @@ Vue.prototype.api = {
 	searchImageByVideoDiagnoseId: baseUrl + "/video_diagnose/searchImageByVideoDiagnoseId",
 	deleteVideoDiagnoseImage: baseUrl + "/video_diagnose/deleteImage",
 
+	searchRoomId: baseUrl + "/video_diagnose/searchRoomId",
+	searchUserSig: baseUrl + "/video_diagnose/searchUserSig",
+
 
 
 }

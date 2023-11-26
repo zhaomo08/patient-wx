@@ -187,9 +187,81 @@ export default {
       });
     },
     onchange: function (){
-
+      //当前倒计时的分钟数字
+      let minutes = e.minutes;
+      //当前倒计时的秒钟数字
+      let seconds = e.seconds;
+      if (minutes == 0 && seconds == 0) {
+      //如果到了问诊开始的时间
+        if (this.startOrEnd == '开始') {
+          this.startOrEnd = '结束';
+          this.enableBtn = true;
+          //更新时间差
+          this.time = dayjs(this.expectEnd).valueOf() - new Date().getTime();
+          //手机发出震动，并且弹出提示信息
+          uni.vibrateLong({
+            complete: function() {
+              uni.showToast({
+                icon: 'none',
+                title: '请进⼊问诊室',
+                duration: 2000
+              });
+            }
+          });
+        }
+        /*
+        * 可能在问诊中，患者手机突然没电关机了。等到他充上电开机之后，
+        * 重新进⼊到候诊页面，可能视频问诊已经过了结束时间，所以这种
+        * 情况就不允许进⼊视频问诊页面
+        */
+        else {
+          //不可以点击进按钮⼊问诊⻚⾯
+          this.enableBtn = false;
+          uni.showToast({
+            icon: 'none',
+            title: '问诊已结束'
+          });
+        }
+      }
+      if (minutes < 10) {
+        e.minutes = '0' + minutes;
+      }
+      if (minutes < 10) {
+        e.seconds = '0' + minutes;
+      }
+      e.timeData = '0' + minutes;
     },
 
+    enterHandle: function () {
+      let that = this;
+      if (!that.enableBtn) {
+        return;
+      }
+      let data = {
+        doctorId: that.doctorId
+      };
+      //查询roomId
+      that.ajax(
+          that.api.searchRoomId,
+          'POST',
+          data,
+          function (resp) {
+            let roomId = resp.data.result;
+            if (roomId != null) {
+              that.roomId = roomId;
+              //查询TRTC的相关数据
+              that.ajax(that.api.searchUserSig, 'GET', null, function (resp) {
+                let userId = resp.data.userId;
+                let userSig = resp.data.userSig;
+                uni.navigateTo({
+                  url: `../video_diagnose/video_diagnose?roomId=${that.roomId}&userId=${userId}&usersig=${userSig}&expectEnd=${that.expectEnd}`
+                });
+              });
+            }
+          },
+          false
+      );
+    }
 	},
   onLoad: function (options) {
     let that = this;
