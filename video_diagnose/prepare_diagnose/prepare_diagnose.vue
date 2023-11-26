@@ -68,26 +68,162 @@
 
 <script>
 import dayjs from 'dayjs';
+
 export default {
 	data() {
 		return {
 			videoDiagnoseId: null,
 			expectStart: null,
 			expectEnd: null,
+      //查询医生上线缓存中的RoomId需要使用doctorId
 			doctorId: null,
 			startOrEnd: '开始',
 			enableBtn: false,
+      //距离开始或者结束还差多少时间
 			time: null,
+      //倒计时的时间对象
 			timeData: {},
+      // 文件列表
 			fileList: []
 		};
 	},
 	methods: {
-		
+    afterRead: function (event) {
+      let that = this;
+      let token = uni.getStorageSync('token');
+
+      //保存选中照片的数组
+      let lists = event.file;
+      //模型层fileList数组元素数量
+      let fileListLen = that.fileList.length;
+      //如果倒计时结束或者问诊已经开始了就不能再上传照片了
+
+      // if (that.time <= 0 || that.startOrEnd == '结束') {
+      //   return;
+      // }
+      //把新选中的照片添加到模型层的fileList数组中
+      lists.map(item => {
+        that.fileList.push({
+          ...item,
+          status: 'uploading',
+          message: '上传中'
+        });
+      });
+      //遍历数组，把这些照片上传到服务端
+      for (let i = 0; i < lists.length; i++) {
+        uni.uploadFile({
+          url: `${that.api.uploadVideoDiagnoseImage}?token=${token}`,
+          filePath: lists[i].url,
+          name: 'file',
+          formData: {
+            videoDiagnoseId: that.videoDiagnoseId
+          },
+          success: resp => {
+            //返回的是字符串，需要转换成JSON
+            let filename = JSON.parse(resp.data).filename;
+            //取出刚上传的成功⽂件的JSON对象
+            let item = that.fileList[fileListLen];
+            item["status"] = "success"
+            //因为删除文件的时候需要使用 filename，所以把filename添加到JSON对象中
+            item["filename"] = filename
+            fileListLen++;
+          }
+        });
+      }
+    },
+    deleteImage: function(event) {
+      let that = this;
+      //倒计时结束或者问诊开始，则无法删除照片
+      if (that.time <= 0 || that.startOrEnd == '结束') {
+        return;
+      }
+      let filename = that.fileList[event.index].filename;
+      let data = {
+        videoDiagnoseId: that.videoDiagnoseId,
+        filename: filename
+      };
+      that.ajax(
+          that.api.deleteVideoDiagnoseImage,
+          'POST',
+          data,
+          function(resp) {
+            uni.showToast({
+              icon: 'success',
+              title: '文件删除成功'
+            });
+            that.fileList.splice(event.index, 1);
+          },
+          false
+      );
+    },
+    deleteAllImageHandle: function () {
+      let that = this;
+      if (that.time <= 0 || that.startOrEnd == '结束') {
+        return;
+      }
+      uni.showModal({
+        title: '提示信息',
+        content: '您确定删除所有上传⽂件？',
+        success: function (resp) {
+          if (resp.confirm) {
+            let data = {
+              videoDiagnoseId: that.videoDiagnoseId
+            };
+            that.ajax(
+                that.api.deleteVideoDiagnoseImage,
+                'POST',
+                data,
+                function (resp) {
+                  uni.showToast({
+                    icon: 'success',
+                    title: '⽂件删除成功'
+                  });
+                  that.fileList.length = [];
+                },
+                false
+            );
+          }
+        }
+      });
+    },
+    onchange: function (){
+
+    },
+
 	},
-	onLoad: function(options) {
-		
-	}
+  onLoad: function (options) {
+    let that = this;
+    that.videoDiagnoseId = Number(options.videoDiagnoseId);
+    that.expectStart = options.expectStart;
+    that.expectEnd = options.expectEnd;
+    that.doctorId = options.doctorId;
+    //计算开始时间与当前时间的时间差（时间戳毫秒时间）
+    let time = dayjs(that.expectStart).valueOf() - new Date().getTime();
+    //开始时间晚于当前时间
+    if (time > 0) {
+      that.startOrEnd = '开始';
+      that.enableBtn = false;
+    } else {
+      time = dayjs(that.expectEnd).valueOf() - new Date().getTime();
+      that.startOrEnd = '结束';
+      that.enableBtn = true;
+    }
+    //把时间差保存到模型层
+    that.time = time;
+    let data = {
+      videoDiagnoseId: that.videoDiagnoseId
+    };
+    that.ajax(that.api.searchImageByVideoDiagnoseId, 'POST', data, function (resp) {
+      let result = resp.data.result;
+      for (let one of result) {
+        that.fileList.push({
+          thumb: `${that.minioUrl}/${one.path}`,
+          url: `${that.minioUrl}/${one.path}`,
+          type: 'image'
+        });
+      }
+    });
+  }
 };
 </script>
 
