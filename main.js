@@ -94,6 +94,9 @@ Vue.prototype.api = {
 
 	searchVideoDiagnoseByPage: baseUrl + "/video_diagnose/searchByPage",
 
+
+	searchPrescriptionByRegistrationId: baseUrl + "/prescription/searchPrescriptionByRegistrationId",
+
 }
 
 Vue.prototype.ajax = function(url, method, data, fun, load) {
