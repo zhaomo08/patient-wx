@@ -37,6 +37,7 @@
 					<u-cell title="就诊时间" :border="false" :value="datetime"></u-cell>
 					<u-cell title="挂号人" :border="false" :value="patientName"></u-cell>
 					<u-cell title="挂号费" :border="false" :value="amount"></u-cell>
+          <u-cell v-if="prescriptionId != null" :border="false" :url="`/registration/prescription/prescription?registrationId=${id}`" isLink title="电⼦处⽅"></u-cell>
 				</u-cell-group>
 			</view>
 		</view>
@@ -82,7 +83,8 @@
 					'14': '15:30',
 					'15': '16:00'
 				},
-				flag: false
+				flag: false,
+        prescriptionId: null
 			};
 		},
 		methods: {},
@@ -121,6 +123,9 @@
 					} else {
 						that.flag = false;
 					}
+          if (data.hasOwnProperty('prescriptionId')) {
+            that.prescriptionId = data.prescriptionId;
+          }
 				},
 				false
 			);
