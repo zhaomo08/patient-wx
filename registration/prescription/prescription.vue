@@ -57,10 +57,25 @@ export default {
 			doctor: null
 		};
 	},
-	methods: {},
-	onLoad(options) {
-		
-	}
+  methods: {},
+  onLoad(options) {
+    let that = this;
+    let registrationId = options.registrationId;
+    let data = {
+      registrationId: registrationId
+    };
+    that.ajax(that.api.searchPrescriptionByRegistrationId, 'POST', data, function (resp) {
+      let result = resp.data.result;
+      that.uuid = result.uuid;
+      that.patient.name = result.patientName;
+      that.patient.sex = result.patientSex;
+      that.patient.age = result.patientAge;
+      that.deptSub = result.deptSub;
+      that.diagnosis = result.diagnosis;
+      that.rpList = result.rp;
+      that.doctor = result.doctorName;
+    });
+  }
 };
 </script>
 
