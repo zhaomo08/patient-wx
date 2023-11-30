@@ -92,7 +92,7 @@ Vue.prototype.api = {
 	searchRoomId: baseUrl + "/video_diagnose/searchRoomId",
 	searchUserSig: baseUrl + "/video_diagnose/searchUserSig",
 
-
+	searchVideoDiagnoseByPage: baseUrl + "/video_diagnose/searchByPage",
 
 }
 
